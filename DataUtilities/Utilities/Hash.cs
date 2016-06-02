@@ -11,6 +11,18 @@ namespace DataUtilities
     {
         #region Public methods
         /// <summary>
+        /// Extension method to hash a string using the MD5 algorithm. This algorithm is no longer secure and should only be used for legacy evaluations!
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string MD5(this string value)
+        {
+            byte[] _ba = System.Text.Encoding.UTF8.GetBytes(value);
+            MD5 _sha = new MD5CryptoServiceProvider();
+            return ByteArrayToString(_sha.ComputeHash(_ba));
+        }
+
+        /// <summary>
         /// Extension method to hash a string using the SHA1 algorithm. This algorithm is no longer secure and should only be used for legacy evaluations!
         /// </summary>
         /// <param name="value"></param>
