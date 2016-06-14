@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace DataUtilities.Test
 {
@@ -196,6 +197,79 @@ namespace DataUtilities.Test
             Trace.WriteLine(String.Format("Hex value: {0}", _hex));
 
             Assert.AreNotEqual("FFFFEE", _hex);
+        }
+
+        [TestMethod]
+        public void DelimitedStringToIntArrayFilteredSuccess()
+        {
+            string _list = "1,2,3,x,5";
+            Trace.WriteLine(String.Format("Delimited string: {0}", _list));
+
+            int[] _output = _list.StringToIntArray(',', true);
+            Trace.WriteLine("Array output:");
+            foreach (int x in _output)
+            {
+                Trace.WriteLine(String.Format("- {0}", x));
+            }
+            Trace.WriteLine(String.Format("Length: {0}", _output.Length));
+
+            Assert.AreEqual(4, _output.Length);
+        }
+
+        [TestMethod]
+        public void DelimitedStringToIntArrayFilteredFail()
+        {
+            string _list = "1,2,3,x,5";
+            Trace.WriteLine(String.Format("Delimited string: {0}", _list));
+
+            int[] _output = _list.StringToIntArray(',', true);
+            Trace.WriteLine("Array output:");
+            foreach (int x in _output)
+            {
+                Trace.WriteLine(String.Format("- {0}", x));
+            }
+            Trace.WriteLine(String.Format("Length: {0}", _output.Length));
+
+            Assert.AreNotEqual(5, _output.Length);
+        }
+
+        [TestMethod]
+        public void IntArrayToDelimitedStringSuccess()
+        {
+            int[] _array = new int[3];
+            _array[0] = 1;
+            _array[1] = 2;
+            _array[2] = 3;
+            Trace.WriteLine(String.Format("Array length: {0}", _array.Length));
+
+            string _delim = _array.IntArrayToDelimitedString(',');
+            Trace.WriteLine(String.Format("Output: {0}", _delim));
+
+            Assert.AreEqual("1,2,3", _delim);
+        }
+
+        [TestMethod]
+        public void CalculateAgeTestSuccess()
+        {
+            DateTime _dob = new DateTime(1980, 8, 1);
+            Trace.WriteLine(String.Format("Date of birth: {0}", _dob.ToShortDateString()));
+
+            int _age = _dob.CalculateAge();
+            Trace.WriteLine(String.Format("Current age: {0}", _age));
+
+            Assert.AreEqual(35, _age);
+        }
+
+        [TestMethod]
+        public void PascalCaseToSentenceSuccess()
+        {
+            string _value = "TheCatSatOnTheMat";
+            Trace.WriteLine(String.Format("Pascal value: {0}", _value));
+
+            string _output = _value.PascalCaseToSentence();
+            Trace.WriteLine(String.Format("Converted sentence: {0}", _output));
+
+            Assert.AreEqual("The cat sat on the mat", _output);
         }
     }
 }

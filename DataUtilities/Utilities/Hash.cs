@@ -69,6 +69,13 @@ namespace DataUtilities
             SHA512 _sha = new SHA512CryptoServiceProvider();
             return ByteArrayToString(_sha.ComputeHash(_ba));
         }
+
+        public static string RIPEMD160(this string value)
+        {
+            byte[] _ba = System.Text.Encoding.UTF8.GetBytes(value);
+            RIPEMD160 _ripe = System.Security.Cryptography.RIPEMD160.Create();
+            return ByteArrayToString(_ripe.ComputeHash(_ba));
+        }
         #endregion
 
         #region Private methods

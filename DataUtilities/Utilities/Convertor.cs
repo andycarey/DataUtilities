@@ -9,7 +9,7 @@ namespace DataUtilities
 {
     public static class Convertor
     {
-        #region Hex to RGB
+        #region Hex to RGB / RGB to Hex
         /// <summary>
         /// Extension method to convert a hex string into an RGB int array.
         /// </summary>
@@ -53,9 +53,7 @@ namespace DataUtilities
 
             return String.Concat(_array[0].ToString(), ",", _array[1].ToString(), ",", _array[2].ToString());
         }
-        #endregion
 
-        #region RGB to Hex
         /// <summary>
         /// Convert an RGB string array into a hex string
         /// </summary>
@@ -152,6 +150,168 @@ namespace DataUtilities
             }
 
             return _output;
+        }
+        #endregion
+
+        #region Arrays to String lists / String lists to Arrays
+        /// <summary>
+        /// Extension method that converts an int array into a delimited string
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static string IntArrayToDelimitedString(this int[] array, char delimiter)
+        {
+            return String.Join(
+                delimiter.ToString(),
+                array.Select(i => i.ToString()));
+        }
+
+        /// <summary>
+        /// Extension method that converts a bool array into a delimited string
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static string BoolArrayToDelimitedString(this bool[] array, char delimiter)
+        {
+            return String.Join(
+                delimiter.ToString(),
+                array.Select(i => i.ToString()));
+        }
+
+        /// <summary>
+        /// Extension method that converts a string into an int array, optionally omitting any non-ints
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="omitNonInts"></param>
+        /// <returns></returns>
+        public static int[] StringToIntArray(this string list, char delimiter, bool omitNonInts)
+        {
+            try
+            {
+                if (!omitNonInts)
+                {
+                    return list
+                        .Split(delimiter)
+                        .Select(s => Int32.Parse(s))
+                        .ToArray();
+                }
+                else
+                {
+                    int _test = 0;
+                    return list
+                        .Split(delimiter)
+                        .Where(i => Int32.TryParse(i, out _test))
+                        .Select(s => Int32.Parse(s))
+                        .ToArray();
+                }
+            }
+            catch(Exception)
+            {
+                // Exception probably thrown because array contained one or more 
+                // non-ints, and omitNonInts was set to false
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Extension method that converts a string into a bool array, optionally omitting any non-booleans
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="omitNonBools"></param>
+        /// <returns></returns>
+        public static bool[] StringToBoolArray(this string list, char delimiter, bool omitNonBools)
+        {
+            try
+            {
+                if (!omitNonBools)
+                {
+                    return list
+                        .Split(delimiter)
+                        .Select(s => Boolean.Parse(s))
+                        .ToArray();
+                }
+                else
+                {
+                    bool _test = false;
+                    return list
+                        .Split(delimiter)
+                        .Where(i => Boolean.TryParse(i, out _test))
+                        .Select(s => Boolean.Parse(s))
+                        .ToArray();
+                }
+            }
+            catch (Exception)
+            {
+                // Exception probably thrown because array contained one or more 
+                // non-bools, and omitNonBools was set to false
+                throw;
+            }
+        }
+        #endregion
+
+        #region Other conversions and calculations
+        /// <summary>
+        /// Extension method that calculates a percentage of a value from a total using decimals.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="total"></param>
+        /// <returns></returns>
+        public static decimal CalculatePercent(this decimal value, decimal total)
+        {
+            return (value / total) * 100;
+        }
+
+        /// <summary>
+        /// Extension method that calculates a percentage of a value from a total using ints.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="total"></param>
+        /// <returns></returns>
+        public static decimal CalculatePercent(this int value, int total)
+        {
+            return (decimal)(value / total) * 100;
+        }
+
+        public static int CalculateAge(this DateTime birthDate)
+        {
+            int _age = (DateTime.Now.Year - birthDate.Year);
+
+            if (birthDate > DateTime.Now.AddYears(-_age))
+            {
+                _age--;
+            }
+
+            return _age;
+        }
+
+        public static string PascalCaseToSentence(this string value)
+        {
+            StringBuilder _output = new StringBuilder();
+            bool _firstChar = true;
+
+            foreach(char c in value.ToCharArray())
+            {
+                if (Char.IsUpper(c) && !_firstChar)
+                {
+                    _output.Append(' ');
+                    _output.Append(Char.ToLower(c));
+                }
+                else
+                {
+                    _output.Append(c);
+
+                    if (_firstChar)
+                    {
+                        _firstChar = false;
+                    }
+                }
+            }
+
+            return _output.ToString();
         }
         #endregion
     }
